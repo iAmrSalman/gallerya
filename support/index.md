@@ -2,7 +2,6 @@
 layout: default
 layout_kind: prose
 title: Support
-tint: violet
 ---
 
 # Support

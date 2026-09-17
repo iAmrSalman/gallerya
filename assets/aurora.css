@@ -34,22 +34,72 @@ body {
   overflow-x: hidden;
 }
 
-/* Three radial glows, the same geometry as AuroraBackground: one high and slightly
-   off-centre so the light falls from above the content, one cooler low down so the
-   background is never a flat wash, and a tight one to keep the top from going grey. */
-.aurora {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
+/* ── The background, breathing through the app's three tints ───────────────────
+   The app paints one tint per screen: azure on Backup, jade on Cleanup, violet on
+   the Archive. A website has no tabs to switch between, so instead of picking one
+   it cross-fades all three — the same three radial glows in the same positions
+   (one high and slightly off-centre so the light falls from above the content, one
+   cooler low down so it is never a flat wash, one tight at the top), just with the
+   colours handed over.
+
+   Three stacked layers whose opacities cross-fade, rather than animating the
+   gradients themselves: opacity and transform are the two things a browser can
+   composite on the GPU, so this costs nothing to run. Linear timing on purpose —
+   at any moment exactly two layers are visible and their opacities sum to one, so
+   total brightness stays constant and there is no dip as one hands over to the next.
+
+   One full cycle is 78 seconds, which is slow enough that nobody watching the page
+   sees it change and anybody staying a while notices the room has warmed. */
+.aurora { position: fixed; inset: 0; z-index: -1; }
+
+.aurora .glow {
+  position: absolute; inset: -12%;
+  opacity: 0;
+  animation: tint-cycle 78s linear infinite, tint-drift 63s ease-in-out infinite alternate;
+  will-change: opacity, transform;
+}
+
+.aurora .azure {
   background:
-    radial-gradient(60vw 60vw at 42% -8%, var(--azure-core) 0%, rgba(23, 71, 199, 0.28) 50%, transparent 100%),
-    radial-gradient(55vw 55vw at 97% 74%, rgba(77, 36, 153, 0.72) 0%, transparent 100%),
+    radial-gradient(60vw 60vw at 42% -8%, rgb(23, 71, 199) 0%, rgba(23, 71, 199, 0.28) 50%, transparent 100%),
+    radial-gradient(55vw 55vw at 97% 74%, rgba(76, 36, 153, 0.72) 0%, transparent 100%),
     radial-gradient(22vw 22vw at 42% 0%, rgba(23, 71, 199, 0.55) 0%, transparent 100%);
 }
-.aurora.violet {
+.aurora .jade {
   background:
-    radial-gradient(60vw 60vw at 42% -8%, var(--violet-core) 0%, rgba(107, 51, 184, 0.28) 50%, transparent 100%),
-    radial-gradient(55vw 55vw at 97% 74%, rgba(26, 51, 140, 0.72) 0%, transparent 100%);
+    radial-gradient(60vw 60vw at 42% -8%, rgb(10, 133, 97) 0%, rgba(10, 133, 97, 0.28) 50%, transparent 100%),
+    radial-gradient(55vw 55vw at 97% 74%, rgba(15, 61, 133, 0.72) 0%, transparent 100%),
+    radial-gradient(22vw 22vw at 42% 0%, rgba(10, 133, 97, 0.55) 0%, transparent 100%);
+  animation-delay: -26s, -21s;
+}
+.aurora .violet {
+  background:
+    radial-gradient(60vw 60vw at 42% -8%, rgb(107, 51, 184) 0%, rgba(107, 51, 184, 0.28) 50%, transparent 100%),
+    radial-gradient(55vw 55vw at 97% 74%, rgba(26, 51, 140, 0.72) 0%, transparent 100%),
+    radial-gradient(22vw 22vw at 42% 0%, rgba(107, 51, 184, 0.55) 0%, transparent 100%);
+  animation-delay: -52s, -42s;
+}
+
+/* A triangular wave: up over a third of the cycle, down over the next, dark for the
+   rest. Offsetting each layer by a third means one is always arriving as another leaves. */
+@keyframes tint-cycle {
+  0%   { opacity: 1; }
+  33.333% { opacity: 0; }
+  66.667% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* A slow drift so the light is never quite still. Different period from the colour
+   cycle, so the two never line up into an obvious loop. */
+@keyframes tint-drift {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to   { transform: translate3d(-2.5%, 1.5%, 0) scale(1.07); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Hold on azure — the tint the app opens on — and stop moving. */
+  .aurora .glow { animation: none; }
+  .aurora .azure { opacity: 1; }
 }
 
 .wrap { width: min(1080px, 92vw); margin: 0 auto; }

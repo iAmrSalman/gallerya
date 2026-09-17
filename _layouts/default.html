@@ -12,7 +12,11 @@
 <link rel="stylesheet" href="{{ '/assets/aurora.css' | relative_url }}">
 </head>
 <body>
-<div class="aurora {{ page.tint }}"></div>
+<div class="aurora" aria-hidden="true">
+  <span class="glow azure"></span>
+  <span class="glow jade"></span>
+  <span class="glow violet"></span>
+</div>
 <nav class="top"><div class="wrap">
   <a class="mark" href="{{ '/' | relative_url }}">Gallerya</a>
   <span class="spacer"></span>
