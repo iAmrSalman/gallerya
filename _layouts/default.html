@@ -18,6 +18,9 @@
 <meta name="description" content="{{ page_description }}">
 <link rel="canonical" href="{{ page.url | absolute_url }}">
 <meta name="robots" content="index, follow, max-image-preview:large">
+{%- if site.google_site_verification %}
+<meta name="google-site-verification" content="{{ site.google_site_verification }}">
+{%- endif %}
 <meta name="theme-color" content="#09090e">
 
 <link rel="icon" href="{{ '/assets/icon-32.png' | relative_url }}" sizes="32x32" type="image/png">
