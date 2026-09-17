@@ -157,3 +157,125 @@ article.prose ul { padding-left: 22px; }
 article.prose li { margin-bottom: 8px; }
 article.prose strong { color: var(--ink); }
 article.prose { padding: 40px 0 72px; }
+
+/* ── Hero: copy beside the device, stacked on narrow screens ───────────────── */
+header.hero { text-align: left; padding: clamp(40px, 7vw, 96px) 0 48px; }
+header.hero .split {
+  display: grid; gap: clamp(28px, 5vw, 64px); align-items: center;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+}
+header.hero p.lede { margin-left: 0; max-width: 34em; }
+@media (max-width: 860px) {
+  header.hero { text-align: center; }
+  header.hero .split { grid-template-columns: 1fr; }
+  header.hero p.lede { margin-left: auto; margin-right: auto; }
+}
+
+/* ── The device the demo plays inside ─────────────────────────────────────── */
+.device {
+  --w: min(330px, 78vw);
+  width: var(--w);
+  aspect-ratio: 440 / 956;      /* iPhone 17 Pro Max, in points */
+  margin: 0 auto;
+  padding: calc(var(--w) * 0.028);
+  border-radius: calc(var(--w) * 0.155);
+  background: linear-gradient(160deg, #2a2a33, #0d0d12 55%, #24242c);
+  box-shadow: 0 40px 90px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(255, 255, 255, 0.09);
+}
+.device .screen {
+  position: relative; height: 100%; overflow: hidden;
+  border-radius: calc(var(--w) * 0.13);
+  background: var(--base);
+  /* the same glow the app paints behind the Backup tab */
+  background-image:
+    radial-gradient(120% 70% at 42% -8%, var(--azure-core) 0%, rgba(23, 71, 199, 0.22) 45%, transparent 100%),
+    radial-gradient(110% 60% at 97% 78%, rgba(77, 36, 153, 0.6) 0%, transparent 100%);
+  padding: calc(var(--w) * 0.055) calc(var(--w) * 0.05);
+  font-size: calc(var(--w) * 0.0345);
+  color: var(--body);
+}
+.device .island {
+  position: absolute; top: calc(var(--w) * 0.028); left: 50%; transform: translateX(-50%);
+  width: 31%; height: calc(var(--w) * 0.075);
+  background: #000; border-radius: 999px;
+}
+.device .statusbar {
+  display: flex; justify-content: space-between; align-items: center;
+  font-variant-numeric: tabular-nums; color: var(--ink);
+  font-size: calc(var(--w) * 0.038); font-weight: 600;
+  padding: 0 calc(var(--w) * 0.02) calc(var(--w) * 0.05);
+}
+.device .statusbar .icons { display: flex; gap: 5px; align-items: center; opacity: 0.9; }
+.device .statusbar .battery {
+  width: calc(var(--w) * 0.062); height: calc(var(--w) * 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.75); border-radius: 3px;
+  position: relative;
+}
+.device .statusbar .battery::after {
+  content: ""; position: absolute; inset: 1.5px; background: var(--ink); border-radius: 1.5px;
+}
+.device h4 {
+  font-family: var(--display); font-weight: 700; color: var(--ink);
+  font-size: calc(var(--w) * 0.088); margin: 0 0 calc(var(--w) * 0.045);
+}
+.device .glass {
+  background: var(--panel); border: 1px solid var(--hairline);
+  border-radius: calc(var(--w) * 0.075); padding: calc(var(--w) * 0.05);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+}
+.device .row { display: flex; align-items: center; gap: calc(var(--w) * 0.025); }
+.device .marker {
+  font-size: calc(var(--w) * 0.031); font-weight: 600; letter-spacing: 1.2px;
+  text-transform: uppercase; color: var(--quiet);
+}
+.device .rate { margin-left: auto; font-variant-numeric: tabular-nums; color: var(--quiet); font-size: calc(var(--w) * 0.034); }
+.device .count {
+  display: block; font-weight: 300; color: var(--ink);
+  font-size: calc(var(--w) * 0.2); line-height: 1.05;
+  font-variant-numeric: tabular-nums;
+  margin-top: calc(var(--w) * 0.035);
+}
+.device .of { display: block; color: var(--body); font-size: calc(var(--w) * 0.042); }
+.device .track {
+  height: calc(var(--w) * 0.022); border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: calc(var(--w) * 0.05) 0 calc(var(--w) * 0.04);
+  overflow: hidden;
+}
+.device .track span {
+  display: block; height: 100%; width: 0%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--azure-core), var(--azure-accent));
+  box-shadow: 0 0 12px rgba(115, 184, 255, 0.55);
+}
+.device .file {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: calc(var(--w) * 0.033); color: var(--quiet);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.device .status { font-variant-numeric: tabular-nums; font-size: calc(var(--w) * 0.034); color: var(--faint); margin-top: calc(var(--w) * 0.012); }
+.device .stop {
+  margin-top: calc(var(--w) * 0.05); text-align: center;
+  border: 1px solid rgba(255, 107, 107, 0.45); color: #ff6b6b;
+  border-radius: calc(var(--w) * 0.04); padding: calc(var(--w) * 0.035) 0;
+  font-weight: 700; font-size: calc(var(--w) * 0.042);
+  background: rgba(255, 107, 107, 0.08);
+}
+.device .verdict { display: flex; align-items: center; gap: 8px; }
+.device .verdict .marker { color: var(--good); }
+.device .caption { text-align: center; color: var(--faint); font-size: 13px; margin-top: 14px; }
+
+/* The three working bars the app animates beside "Backing up". */
+.bars { display: flex; align-items: flex-end; gap: 2px; height: calc(var(--w) * 0.038); }
+.bars i {
+  width: calc(var(--w) * 0.011); background: var(--azure-accent); border-radius: 1px;
+  animation: bar 1s ease-in-out infinite;
+}
+.bars i:nth-child(2) { animation-delay: 0.18s; }
+.bars i:nth-child(3) { animation-delay: 0.36s; }
+@keyframes bar { 0%, 100% { height: 28%; } 50% { height: 100%; } }
+@media (prefers-reduced-motion: reduce) { .bars i { animation: none; height: 64%; } }
+
+/* Screenshots further down: exported at twice their rendered width so a retina
+   display has pixels to work with, which the first attempt did not. */
+.shots img { width: min(280px, 44vw); height: auto; }

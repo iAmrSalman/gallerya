@@ -3,19 +3,54 @@ layout: default
 tint: ""
 ---
 
-<header class="hero"><div class="wrap">
-  <span class="label">USB-C backup for iPhone and iPad</span>
-  <h1>Your photos, on a<br>drive you own.</h1>
-  <p class="lede">Gallerya copies the new photos and videos out of your library onto a USB-C drive you plug in. No iCloud, no storage subscription, no account.</p>
-  <a class="cta" href="#how">See how it works</a>
-  <p class="note">Coming to the App Store. Free to try: your first 200 items, then $4.99 once.</p>
-</div></header>
+<header class="hero"><div class="wrap split">
+  <div>
+    <span class="label">USB-C backup for iPhone and iPad</span>
+    <h1>Your photos, on a<br>drive you own.</h1>
+    <p class="lede">Gallerya copies the new photos and videos out of your library onto a USB-C drive you plug in. No iCloud, no storage subscription, no account.</p>
+    <a class="cta" href="#how">See how it works</a>
+    <p class="note">Coming to the App Store. Free to try: your first 200 items, then $4.99 once.</p>
+  </div>
 
-<div class="wrap shots">
-  <img src="{{ '/assets/shots/archive.png' | relative_url }}" alt="The archive on a drive, as a gallery grouped by year and month" width="700" height="1520" loading="lazy">
-  <img src="{{ '/assets/shots/ready.png' | relative_url }}" alt="Two hundred items ready to copy, and what they weigh" width="700" height="1520" loading="lazy">
-  <img src="{{ '/assets/shots/cleanup.png' | relative_url }}" alt="Cleanup showing what is backed up and safe to delete" width="700" height="1520" loading="lazy">
-</div>
+  <div>
+    <!-- The backup screen, played through a three-minute run. Same panel the app draws while
+         copying; see assets/backup-demo.js for why this is animated rather than a video. -->
+    <div class="device" data-backup-demo>
+      <div class="screen">
+        <div class="island"></div>
+        <div class="statusbar">
+          <span data-clock>9:41</span>
+          <span class="icons"><span>••••</span><span class="battery"></span></span>
+        </div>
+        <h4>Backup</h4>
+
+        <div class="glass" data-running>
+          <div class="row">
+            <span class="bars"><i></i><i></i><i></i></span>
+            <span class="marker">Backing up</span>
+            <span class="rate" data-rate>23.4 MB/s</span>
+          </div>
+          <span class="count" data-count>0</span>
+          <span class="of">of <span data-total>2,150</span> items</span>
+          <div class="track"><span data-bar></span></div>
+          <div class="file" data-name>IMG_4000.HEIC</div>
+          <div class="status" data-status>about 3 minutes left</div>
+          <div class="stop">Stop Backup</div>
+        </div>
+
+        <div class="glass" data-done hidden>
+          <div class="row verdict">
+            <span class="dot good"></span><span class="marker">Safe</span>
+          </div>
+          <span class="count"><span data-done-count>2,150</span></span>
+          <span class="of">items backed up</span>
+          <div class="status" style="margin-top:14px">Verified byte for byte against the catalog</div>
+        </div>
+      </div>
+    </div>
+    <p class="caption">A backup in progress — 2,150 items, three minutes.</p>
+  </div>
+</div></header>
 
 <section><div class="wrap">
   <span class="label">What it does</span>
@@ -45,6 +80,16 @@ tint: ""
       <h3>Works completely offline</h3>
       <p>There is no server and nothing is uploaded. Gallerya has no idea whether you are online — a backup that needs a signal is not a backup you control.</p>
     </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <span class="label">On the phone</span>
+  <h2>Your archive, not a preview of it.</h2>
+  <div class="shots">
+    <img src="{{ '/assets/shots/archive.jpg' | relative_url }}" alt="The archive on a drive, as a gallery grouped by year and month" loading="lazy">
+    <img src="{{ '/assets/shots/viewer.jpg' | relative_url }}" alt="A photo open full screen, straight from the drive" loading="lazy">
+    <img src="{{ '/assets/shots/cleanup.jpg' | relative_url }}" alt="Cleanup showing what is backed up and safe to delete" loading="lazy">
   </div>
 </div></section>
 
@@ -95,3 +140,5 @@ tint: ""
   <p>No account to make, nothing uploaded, and an archive that outlives the app.</p>
   <p style="margin-top:22px"><a class="cta quiet" href="{{ '/support/' | relative_url }}">Questions? Read the support page</a></p>
 </div></section>
+
+<script src="{{ '/assets/backup-demo.js' | relative_url }}" defer></script>
