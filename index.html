@@ -14,14 +14,14 @@ layout: default
   <div>
     <!-- The backup screen, played through a one-minute run. Same panel the app draws while
          copying; see assets/backup-demo.js for why this is animated rather than a video. -->
-    <div class="device" data-backup-demo>
+    <div class="device" data-backup-demo aria-hidden="true">
       <div class="screen">
         <div class="island"></div>
         <div class="statusbar">
           <span data-clock>9:41</span>
           <span class="icons"><span>••••</span><span class="battery"></span></span>
         </div>
-        <h4>Backup</h4>
+        <div class="screen-title">Backup</div>
 
         <div class="glass" data-running>
           <div class="row">
@@ -99,7 +99,8 @@ layout: default
     </div>
   </div>
   <figure>
-    <img src="{{ '/assets/shots/viewer.jpg' | relative_url }}" alt="A photo open full screen, read straight from the drive" loading="lazy">
+    <img src="{{ '/assets/shots/viewer.jpg' | relative_url }}" alt="A photo open full screen, read straight from the drive"
+         width="620" height="1347" loading="lazy" decoding="async">
     <figcaption>A photo opened from the drive — share, copy back to Photos, or remove it from the archive.</figcaption>
   </figure>
 </div></section>
@@ -122,7 +123,8 @@ layout: default
     <p class="note">Two different jobs, kept separate: deleting from Photos frees space on your phone and leaves the archive untouched. Removing from the archive frees space on the drive and leaves your photo library untouched.</p>
   </div>
   <figure>
-    <img src="{{ '/assets/shots/cleanup.jpg' | relative_url }}" alt="Cleanup showing the library and drive counts, and where the space went by year" loading="lazy">
+    <img src="{{ '/assets/shots/cleanup.jpg' | relative_url }}" alt="Cleanup showing the library and drive counts, and where the space went by year"
+         width="620" height="1347" loading="lazy" decoding="async">
     <figcaption>What is on the phone, what is on the drive, and which year is filling it.</figcaption>
   </figure>
 </div></section>

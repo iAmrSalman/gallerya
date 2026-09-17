@@ -1,6 +1,8 @@
 ---
 layout: default
 layout_kind: prose
+description: >-
+  Help with Gallerya: choosing a USB-C drive, what gets backed up, verifying an archive, using Cleanup safely, purchases and restoring them.
 title: Support
 ---
 

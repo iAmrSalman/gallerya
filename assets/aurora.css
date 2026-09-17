@@ -272,7 +272,7 @@ header.hero p.lede { margin-left: 0; max-width: 34em; }
 .device .statusbar .battery::after {
   content: ""; position: absolute; inset: 1.5px; background: var(--ink); border-radius: 1.5px;
 }
-.device h4 {
+.device .screen-title {
   font-family: var(--display); font-weight: 700; color: var(--ink);
   font-size: calc(var(--w) * 0.088); margin: 0 0 calc(var(--w) * 0.045);
 }

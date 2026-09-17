@@ -1,0 +1,19 @@
+---
+layout: null
+---
+<?xml version="1.0" encoding="UTF-8"?>
+{%- comment -%}
+  Built from the page list rather than hand-written, so adding a page cannot silently leave it out
+  of the sitemap. robots.txt and this file are themselves pages, hence the filter.
+{%- endcomment -%}
+{%- assign listed = site.pages | where_exp: "p", "p.url != '/robots.txt' and p.url != '/sitemap.xml'" -%}
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+{%- for p in listed %}
+  <url>
+    <loc>{{ p.url | absolute_url }}</loc>
+    <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>{% if p.url == '/' %}1.0{% else %}0.6{% endif %}</priority>
+  </url>
+{%- endfor %}
+</urlset>

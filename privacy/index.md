@@ -1,6 +1,8 @@
 ---
 layout: default
 layout_kind: prose
+description: >-
+  Gallerya's privacy policy. The app has no account, no analytics and no network access: your photos never leave your phone and the drive you own.
 title: Privacy Policy
 ---
 

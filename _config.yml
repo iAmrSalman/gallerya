@@ -1,6 +1,11 @@
+url: https://iamrsalman.github.io
+baseurl: /gallerya
+lang: en
+
 title: Gallerya
 tagline: Your photos, on a drive you own
 description: Back up the new photos and videos in your Photos library to a USB-C drive you own. No iCloud, no storage subscription, no account.
 # No theme: the layout in _layouts/default.html carries the app's own design language.
 plugins: []
 exclude: [README.md]
+
