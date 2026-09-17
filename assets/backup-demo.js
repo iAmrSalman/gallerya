@@ -2,7 +2,7 @@
  *
  * Not a screen recording: the panel below is the same structure the app draws while copying —
  * label and rate, the count over the total, the bar, a filename that changes slowly enough to
- * read, the status line, the stop button — and this drives it through three minutes of a plausible
+ * read, the status line, the stop button — and this drives it through a minute of a plausible
  * run. A recording would be a video file, would blur when scaled, and would go stale the moment
  * the design moved; this stays sharp and lives in the same stylesheet as everything else.
  *
@@ -56,7 +56,7 @@
   }
 
   if (reduced) {
-    // Nobody who asked for less motion wants a counter ticking for three minutes.
+    // Nobody who asked for less motion wants a counter ticking at them at all.
     settled();
     return;
   }
