@@ -44,7 +44,7 @@
   function remaining(msLeft) {
     const s = Math.round(msLeft / 1000);
     if (s >= 120) return "about " + Math.round(s / 60) + " minutes left";
-    if (s >= 60) return "about a minute left";
+    if (s >= 55) return "about a minute left";
     if (s > 5) return "about " + (Math.ceil(s / 5) * 5) + " seconds left";
     return "finishing up…";
   }
@@ -72,6 +72,7 @@
     if (elapsed > RUN_MS + SETTLE_MS) {
       // Loop: back to the beginning of the run.
       start = now;
+      lastNameAt = -Infinity;
       el.running.hidden = false;
       el.done.hidden = true;
       requestAnimationFrame(frame);
@@ -87,7 +88,7 @@
     // Slightly eased rather than linear: a real copy starts a touch slow while the drive spins
     // up its write cache, and the last stretch is the big videos.
     const t = elapsed / RUN_MS;
-    const eased = t < 0.08 ? t * 0.7 : Math.min(1, 0.056 + (t - 0.08) * 1.026);
+    const eased = t < 0.08 ? t * 0.7 : Math.min(1, 0.056 + (t - 0.08) * 1.0261);
     const done = Math.min(TOTAL, Math.floor(eased * TOTAL));
 
     el.count.textContent = nf.format(done);
