@@ -48,17 +48,18 @@ body {
    at any moment exactly two layers are visible and their opacities sum to one, so
    total brightness stays constant and there is no dip as one hands over to the next.
 
-   One full cycle is 21 seconds: seven to hand each hue over to the next. Slow enough
-   to read as light changing rather than as something flashing, quick enough that you
-   see it happen while reading a section rather than only on the way back. The three
-   delays are a third of the cycle apart, which is what keeps the sum at one — they
-   are derived from the period, not picked, so both move together. */
+   One full cycle is 10 seconds: about three and a third to hand each hue over to the
+   next, so the change is plainly visible while reading a single paragraph.
+
+   The three delays are a third of the cycle apart, and that is what keeps the sum at
+   one. They are derived from the period, not picked: retiming this means changing the
+   duration and both delays together, or the background starts to throb. */
 .aurora { position: fixed; inset: 0; z-index: -1; }
 
 .aurora .glow {
   position: absolute; inset: -12%;
   opacity: 0;
-  animation: tint-cycle 21s linear infinite, tint-drift 17s ease-in-out infinite alternate;
+  animation: tint-cycle 10s linear infinite, tint-drift 17s ease-in-out infinite alternate;
   will-change: opacity, transform;
 }
 
@@ -73,14 +74,14 @@ body {
     radial-gradient(60vw 60vw at 42% -8%, rgb(10, 133, 97) 0%, rgba(10, 133, 97, 0.28) 50%, transparent 100%),
     radial-gradient(55vw 55vw at 97% 74%, rgba(15, 61, 133, 0.72) 0%, transparent 100%),
     radial-gradient(22vw 22vw at 42% 0%, rgba(10, 133, 97, 0.55) 0%, transparent 100%);
-  animation-delay: -7s, -5s;
+  animation-delay: -3.3333s, -5s;
 }
 .aurora .violet {
   background:
     radial-gradient(60vw 60vw at 42% -8%, rgb(107, 51, 184) 0%, rgba(107, 51, 184, 0.28) 50%, transparent 100%),
     radial-gradient(55vw 55vw at 97% 74%, rgba(26, 51, 140, 0.72) 0%, transparent 100%),
     radial-gradient(22vw 22vw at 42% 0%, rgba(107, 51, 184, 0.55) 0%, transparent 100%);
-  animation-delay: -14s, -11s;
+  animation-delay: -6.6667s, -11s;
 }
 
 /* A triangular wave: up over a third of the cycle, down over the next, dark for the
@@ -92,8 +93,9 @@ body {
   100% { opacity: 1; }
 }
 
-/* A drift so the light is never quite still. 17s against the colour cycle's 21s: kept
-   coprime so the pair only realign every few minutes rather than looping visibly. */
+/* A drift so the light is never quite still. Left at 17s against the colour cycle's 10s
+   rather than sped up with it: the movement reads as the light being alive, and at three
+   seconds it would read as wobbling. Coprime, so the pair do not loop visibly. */
 @keyframes tint-drift {
   from { transform: translate3d(0, 0, 0) scale(1); }
   to   { transform: translate3d(-2.5%, 1.5%, 0) scale(1.07); }
