@@ -4,16 +4,23 @@ layout: null
 <?xml version="1.0" encoding="UTF-8"?>
 {%- comment -%}
   Built from the page list rather than hand-written, so adding a page cannot silently leave it out
-  of the sitemap. robots.txt and this file are themselves pages, hence the filter.
+  of the sitemap.
+
+  Only pages whose URL is a directory are listed. That is what distinguishes the three real pages
+  from the things Jekyll also counts as pages: robots.txt, this file, and an assets/css/style.css
+  that the bundled theme contributes and nothing links to. Filtering on the address rather than on
+  a list of names means a new page is included and a new generated file still is not.
 {%- endcomment -%}
-{%- assign listed = site.pages | where_exp: "p", "p.url != '/robots.txt' and p.url != '/sitemap.xml'" -%}
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-{%- for p in listed %}
+{%- for p in site.pages -%}
+{%- assign tail = p.url | slice: -1 -%}
+{%- if tail == '/' %}
   <url>
     <loc>{{ p.url | absolute_url }}</loc>
     <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>{% if p.url == '/' %}1.0{% else %}0.6{% endif %}</priority>
   </url>
+{%- endif -%}
 {%- endfor %}
 </urlset>
