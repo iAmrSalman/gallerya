@@ -1,6 +1,8 @@
 ---
 layout: default
+layout_kind: prose
 title: Privacy Policy
+tint: 
 ---
 
 # Privacy Policy

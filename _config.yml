@@ -1,5 +1,6 @@
-# Only two pages live here: the privacy policy and the support page the App Store
-# listing points at. The app's source stays in its own private repository.
 title: Gallerya
-description: Back up your photos to a USB-C drive you own.
-theme: jekyll-theme-minimal
+tagline: Your photos, on a drive you own
+description: Back up the new photos and videos in your Photos library to a USB-C drive you own. No iCloud, no storage subscription, no account.
+# No theme: the layout in _layouts/default.html carries the app's own design language.
+plugins: []
+exclude: [README.md]

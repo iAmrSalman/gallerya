@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% if page.title and page.title != site.title %}{{ page.title }} · {{ site.title }}{% else %}{{ site.title }} — {{ site.tagline }}{% endif %}</title>
+<meta name="description" content="{{ page.description | default: site.description }}">
+<meta name="theme-color" content="#09090e">
+<meta property="og:title" content="{{ page.title | default: site.title }}">
+<meta property="og:description" content="{{ page.description | default: site.description }}">
+<meta property="og:type" content="website">
+<link rel="stylesheet" href="{{ '/assets/aurora.css' | relative_url }}">
+</head>
+<body>
+<div class="aurora {{ page.tint }}"></div>
+<nav class="top"><div class="wrap">
+  <a class="mark" href="{{ '/' | relative_url }}">Gallerya</a>
+  <span class="spacer"></span>
+  <a class="link" href="{{ '/support/' | relative_url }}">Support</a>
+  <a class="link" href="{{ '/privacy/' | relative_url }}">Privacy</a>
+</div></nav>
+{% if page.layout_kind == "prose" %}
+<div class="column"><article class="prose">{{ content }}</article></div>
+{% else %}
+{{ content }}
+{% endif %}
+<footer><div class="wrap">
+  <div class="row">
+    <a href="{{ '/privacy/' | relative_url }}">Privacy Policy</a>
+    <a href="{{ '/support/' | relative_url }}">Support</a>
+    <a href="mailto:iamrsalman@gmail.com">iamrsalman@gmail.com</a>
+  </div>
+  <div>Gallerya keeps your photos on a drive you own. Nothing is uploaded anywhere.</div>
+</div></footer>
+</body>
+</html>
