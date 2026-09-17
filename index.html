@@ -33,7 +33,7 @@ layout: default
           <span class="of">of <span data-total>2,150</span> items</span>
           <div class="track"><span data-bar></span></div>
           <div class="file" data-name>IMG_4000.HEIC</div>
-          <div class="status" data-status>about 3 minutes left</div>
+          <div class="status" data-status>about a minute left</div>
           <div class="stop">Stop Backup</div>
         </div>
 
@@ -47,7 +47,7 @@ layout: default
         </div>
       </div>
     </div>
-    <p class="caption">A backup in progress — 2,150 items, three minutes.</p>
+    <p class="caption">A backup in progress — 2,150 items in a minute.</p>
   </div>
 </div></header>
 
@@ -82,14 +82,49 @@ layout: default
   </div>
 </div></section>
 
-<section><div class="wrap">
-  <span class="label">On the phone</span>
-  <h2>Your archive, not a preview of it.</h2>
-  <div class="shots">
-    <img src="{{ '/assets/shots/archive.jpg' | relative_url }}" alt="The archive on a drive, as a gallery grouped by year and month" loading="lazy">
-    <img src="{{ '/assets/shots/viewer.jpg' | relative_url }}" alt="A photo open full screen, straight from the drive" loading="lazy">
-    <img src="{{ '/assets/shots/cleanup.jpg' | relative_url }}" alt="Cleanup showing what is backed up and safe to delete" loading="lazy">
+<section><div class="wrap feature">
+  <div>
+    <span class="label">The archive</span>
+    <h2>Everything on the drive, as a gallery.</h2>
+    <p>The archive tab reads the drive, not a thumbnail cache of it. Grouped by year and month, with your albums preserved — the ones you made and the smart ones alike — so what you copied is still organised the way you organised it.</p>
+    <div class="grid two">
+      <div class="panel">
+        <h3>Open anything, full screen</h3>
+        <p>Photos straight from the drive at full resolution. Videos play immediately with a scrubbable bar, mute, and 1×, 1.5× or 2× speed — in portrait or landscape.</p>
+      </div>
+      <div class="panel">
+        <h3>Share it, or take it back</h3>
+        <p>Share anything out, or copy it back into Photos. Hold a photo to start selecting and do it to a dozen at once. Deleting from your phone to free space was never the end of it.</p>
+      </div>
+    </div>
   </div>
+  <figure>
+    <img src="{{ '/assets/shots/viewer.jpg' | relative_url }}" alt="A photo open full screen, read straight from the drive" loading="lazy">
+    <figcaption>A photo opened from the drive — share, copy back to Photos, or remove it from the archive.</figcaption>
+  </figure>
+</div></section>
+
+<section><div class="wrap feature reverse">
+  <div>
+    <span class="label">Cleanup</span>
+    <h2>Free up space without gambling.</h2>
+    <p>Cleanup finds what is probably worth losing — screen recordings, exact duplicates, similar shots, the large files and long videos eating your storage — and shows you where the space actually went, by year, largest first.</p>
+    <div class="grid two">
+      <div class="panel">
+        <h3>Every item says whether it is safe</h3>
+        <p><span class="dot good"></span>A green shield means the archive already holds it, so deleting here cannot lose it.<br><span class="dot warn"></span>An orange triangle means it is not backed up yet.</p>
+      </div>
+      <div class="panel">
+        <h3>Checked before anything is deleted</h3>
+        <p>By default every archived copy is re-read and compared against its recorded SHA-256 first. One mismatch anywhere cancels the whole deletion. A few seconds, against deleting your only copy of a photo.</p>
+      </div>
+    </div>
+    <p class="note">Two different jobs, kept separate: deleting from Photos frees space on your phone and leaves the archive untouched. Removing from the archive frees space on the drive and leaves your photo library untouched.</p>
+  </div>
+  <figure>
+    <img src="{{ '/assets/shots/cleanup.jpg' | relative_url }}" alt="Cleanup showing the library and drive counts, and where the space went by year" loading="lazy">
+    <figcaption>What is on the phone, what is on the drive, and which year is filling it.</figcaption>
+  </figure>
 </div></section>
 
 <section id="how"><div class="wrap">

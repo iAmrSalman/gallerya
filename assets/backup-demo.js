@@ -6,9 +6,10 @@
  * run. A recording would be a video file, would blur when scaled, and would go stale the moment
  * the design moved; this stays sharp and lives in the same stylesheet as everything else.
  *
- * The numbers are chosen to match the app's own behaviour: the counter and the bar update freely
- * because they read fine at any rate, while the filename is throttled the way
- * BackupProgressPanel throttles it.
+ * The numbers have to agree with each other, or the whole thing reads as a mock-up: 2,150 items
+ * in a minute is about 36 a second, which at roughly 2.6 MB an item is the ~95 MB/s a decent
+ * USB-C SSD actually writes. The counter and the bar update freely because they read fine at any
+ * rate; the filename is throttled, the way BackupProgressPanel throttles it.
  */
 (function () {
   const root = document.querySelector("[data-backup-demo]");
@@ -28,9 +29,9 @@
   };
 
   const TOTAL = 2150;          // items in the run
-  const RUN_MS = 180000;       // three minutes, then it settles and starts again
-  const SETTLE_MS = 6000;      // how long the finished state stays up
-  const NAME_INTERVAL = 700;   // the app's own throttle for the filename line
+  const RUN_MS = 60000;        // a minute, then it settles and starts again
+  const SETTLE_MS = 5000;      // how long the finished state stays up
+  const NAME_INTERVAL = 520;   // a shade under the app's 0.7s: the run is quicker here
 
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const nf = new Intl.NumberFormat();
@@ -94,7 +95,7 @@
 
     // A rate that wanders the way a real one does, without ever looking implausible.
     const wobble = 1 + 0.18 * Math.sin(elapsed / 2600) + 0.06 * Math.sin(elapsed / 640);
-    el.rate.textContent = (23.4 * wobble).toFixed(1) + " MB/s";
+    el.rate.textContent = (94.6 * wobble).toFixed(1) + " MB/s";
 
     if (elapsed - lastNameAt >= NAME_INTERVAL) {
       lastNameAt = elapsed;
