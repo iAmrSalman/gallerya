@@ -28,6 +28,7 @@
 <meta name="google-site-verification" content="{{ site.google_site_verification }}">
 {%- endif %}
 <meta name="theme-color" content="#09090e">
+<meta name="color-scheme" content="dark">
 
 <link rel="icon" href="{{ '/assets/icon-32.png' | relative_url }}?v={{ asset_version }}" sizes="32x32" type="image/png">
 <link rel="icon" href="{{ '/assets/icon-512.png' | relative_url }}?v={{ asset_version }}" sizes="512x512" type="image/png">
@@ -96,5 +97,12 @@
   </div>
   <div>Gallerya keeps your photos on a drive you own. Nothing is uploaded anywhere.</div>
 </div></footer>
+{%- comment -%}
+  Safari on iPhone only applies :active to a touch when something is listening for touches;
+  otherwise it shows its grey tap highlight instead, which the stylesheet turns off because every
+  control draws its own pressed state. Without this listener nothing drew one at all: the dim on
+  links and the press on the button only ever showed with a mouse.
+{%- endcomment %}
+<script>document.addEventListener("touchstart", function () {}, { passive: true });</script>
 </body>
 </html>

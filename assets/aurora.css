@@ -37,6 +37,10 @@
   --spring-press: linear(0, 0.0816, 0.2431, 0.4129, 0.562, 0.6819, 0.7736, 0.8412, 0.89, 0.9246,
     0.9487, 0.9653, 0.9767, 0.9844, 0.9896, 0.9931, 0.9955, 0.997, 0.998, 0.9987, 1);
   --spring-press-settle: 450ms;
+
+  /* The page is only ever dark, so say so: scrollbars and native controls draw dark too, rather
+     than a light scrollbar down the side of the glow on platforms that show one. */
+  color-scheme: dark;
 }
 
 /* Increase Contrast: the second value the app carries for every grey and status colour. */
@@ -88,6 +92,14 @@ body {
    at any moment exactly two layers are visible and their opacities sum to one, so
    total brightness stays constant and there is no dip as one hands over to the next.
 
+   That sum only holds if the layers add. Stacked normally, the top layer at half
+   opacity lets through half of a lower layer that is itself at half, so mid-handover
+   the screen is a half of one tint, a quarter of the other, and a quarter of the dark
+   base. Measured in WebKit, the brightest part of the glow lost a quarter of its light
+   at every handover, darker than either tint on its own — a pulse every three and a
+   third seconds across the whole viewport. plus-lighter makes the stack add, as the
+   arithmetic assumed, and the midpoint now falls between the two tints it joins.
+
    One full cycle is 10 seconds: about three and a third to hand each hue over to the
    next, so the change is plainly visible while reading a single paragraph.
 
@@ -99,6 +111,7 @@ body {
 .aurora .glow {
   position: absolute; inset: -12%;
   opacity: 0;
+  mix-blend-mode: plus-lighter;   /* .aurora is its own stacking context, so they add to each other, not to the page */
   animation: tint-cycle 10s linear infinite, tint-drift 17s ease-in-out infinite alternate;
   will-change: opacity, transform;
 }
@@ -226,6 +239,12 @@ nav.top::before {
 nav.top .wrap { display: flex; align-items: baseline; gap: 20px; padding: 14px 0; }
 nav.top .mark { font-family: var(--display); font-weight: 700; color: var(--ink); font-size: 1.25rem; letter-spacing: -0.01em; }
 nav.top a.link { color: var(--body); font-size: 0.9375rem; }
+
+/* The nav and footer links are a line of small text, about 24px tall, where a finger needs 44.
+   Each carries a larger invisible hit region instead of padding, so nothing moves on the page.
+   The footer's gap is wide enough that neighbouring regions never overlap. */
+nav.top a, footer .row a { position: relative; }
+nav.top a::after, footer .row a::after { content: ""; position: absolute; inset: -10px -10px; }
 nav.top a.link[aria-current="page"] { color: var(--ink); font-weight: 600; }
 nav.top .spacer { flex: 1; }
 
@@ -298,7 +317,7 @@ ol.steps li::before {
 
 footer { border-top: 1px solid var(--hairline); padding: 38px 0 56px; color: var(--faint); font-size: 0.875rem; }
 footer a { color: var(--body); }
-footer .row { display: flex; gap: 18px; flex-wrap: wrap; margin-bottom: 10px; }
+footer .row { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 10px; }
 
 /* The prose pages — privacy and support — get the same shell, narrower measure. */
 article.prose h1 { font-size: clamp(2rem, 4.6vw, 2.875rem); margin-bottom: 8px; }
@@ -449,20 +468,23 @@ header.hero p.lede { margin-left: 0; max-width: 34em; }
   font-size: 0.8125rem;
 }
 
-/* The three working bars the app animates beside "Backing up". */
+/* The three working bars the app animates beside "Backing up". Full height and scaled from the
+   bottom, like the progress bar: animating the height itself laid the row out again on every
+   frame, for as long as the hero was on screen. */
 .bars { display: flex; align-items: flex-end; gap: 2px; height: calc(var(--w) * 0.038); }
 .bars i {
-  width: calc(var(--w) * 0.011); background: var(--azure-accent); border-radius: 1px;
+  width: calc(var(--w) * 0.011); height: 100%; background: var(--azure-accent); border-radius: 1px;
+  transform-origin: bottom;
   animation: bar 1s ease-in-out infinite;
 }
 .bars i:nth-child(2) { animation-delay: 0.18s; }
 .bars i:nth-child(3) { animation-delay: 0.36s; }
-@keyframes bar { 0%, 100% { height: 28%; } 50% { height: 100%; } }
+@keyframes bar { 0%, 100% { transform: scaleY(0.28); } 50% { transform: scaleY(1); } }
 .device[data-paused] .bars i { animation-play-state: paused; }
 /* Under Reduce Motion the demo opens already finished, and that one change of state should be
    a cut, not a spring the reader asked not to see. */
 @media (prefers-reduced-motion: reduce) {
-  .bars i { animation: none; height: 64%; }
+  .bars i { animation: none; transform: scaleY(0.64); }
   .device .panes > .glass { transition: none; }
 }
 
