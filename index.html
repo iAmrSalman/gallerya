@@ -14,7 +14,7 @@ layout: default
   <div>
     <!-- The backup screen, played through a one-minute run. Same panel the app draws while
          copying; see assets/backup-demo.js for why this is animated rather than a video. -->
-    <div class="device" data-backup-demo aria-hidden="true">
+    <div class="device" data-backup-demo data-state="running" aria-hidden="true">
       <div class="screen">
         <div class="island"></div>
         <div class="statusbar">
@@ -23,27 +23,29 @@ layout: default
         </div>
         <div class="screen-title">Backup</div>
 
-        <div class="glass" data-running>
-          <div class="row">
-            <span class="bars"><i></i><i></i><i></i></span>
-            <span class="marker">Backing up</span>
-            <span class="rate" data-rate>94.6 MB/s</span>
+        <div class="panes">
+          <div class="glass" data-running>
+            <div class="row">
+              <span class="bars"><i></i><i></i><i></i></span>
+              <span class="marker">Backing up</span>
+              <span class="rate" data-rate>94.6 MB/s</span>
+            </div>
+            <span class="count" data-count>0</span>
+            <span class="of">of <span data-total>2,150</span> items</span>
+            <div class="track"><span data-bar></span></div>
+            <div class="file" data-name>IMG_4000.HEIC</div>
+            <div class="status" data-status>about a minute left</div>
+            <div class="stop">Stop Backup</div>
           </div>
-          <span class="count" data-count>0</span>
-          <span class="of">of <span data-total>2,150</span> items</span>
-          <div class="track"><span data-bar></span></div>
-          <div class="file" data-name>IMG_4000.HEIC</div>
-          <div class="status" data-status>about a minute left</div>
-          <div class="stop">Stop Backup</div>
-        </div>
 
-        <div class="glass" data-done hidden>
-          <div class="row verdict">
-            <span class="dot good"></span><span class="marker">Safe</span>
+          <div class="glass" data-done>
+            <div class="row verdict">
+              <span class="dot good"></span><span class="marker">Safe</span>
+            </div>
+            <span class="count serif"><span data-done-count>2,150</span></span>
+            <span class="of">items backed up</span>
+            <div class="status" style="margin-top:14px">Verified byte for byte against the catalog</div>
           </div>
-          <span class="count"><span data-done-count>2,150</span></span>
-          <span class="of">items backed up</span>
-          <div class="status" style="margin-top:14px">Verified byte for byte against the catalog</div>
         </div>
       </div>
     </div>
@@ -60,7 +62,7 @@ layout: default
       <p>Every run copies only what the drive does not already hold. A second backup right after the first copies nothing — no duplicates, no re-copying 40,000 photos to add yesterday’s.</p>
     </div>
     <div class="panel">
-      <h3>The originals, not re-encodes</h3>
+      <h3>The originals, not re&#8209;encodes</h3>
       <p>Full-resolution HEIC, JPEG and RAW. Original-quality video. Live Photo pairs kept together. Edited and unedited versions both.</p>
     </div>
     <div class="panel">

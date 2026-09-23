@@ -80,8 +80,8 @@
 <nav class="top"><div class="wrap">
   <a class="mark" href="{{ '/' | relative_url }}">Gallerya</a>
   <span class="spacer"></span>
-  <a class="link" href="{{ '/support/' | relative_url }}">Support</a>
-  <a class="link" href="{{ '/privacy/' | relative_url }}">Privacy</a>
+  <a class="link" href="{{ '/support/' | relative_url }}"{% if page.url == '/support/' %} aria-current="page"{% endif %}>Support</a>
+  <a class="link" href="{{ '/privacy/' | relative_url }}"{% if page.url == '/privacy/' %} aria-current="page"{% endif %}>Privacy</a>
 </div></nav>
 {% if page.layout_kind == "prose" %}
 <div class="column"><article class="prose">{{ content }}</article></div>

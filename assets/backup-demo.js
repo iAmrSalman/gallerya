@@ -10,6 +10,10 @@
  * in a minute is about 36 a second, which at roughly 2.6 MB an item is the ~95 MB/s a decent
  * USB-C SSD actually writes. The counter and the bar update freely because they read fine at any
  * rate; the filename is throttled, the way BackupProgressPanel throttles it.
+ *
+ * The run only advances while it is on screen. Scroll away mid-copy and come back, and it carries
+ * on from the count you left rather than having skipped ahead, or restarted, while you were not
+ * looking — the same reason the app never lets a panel jump to a value it did not pass through.
  */
 (function () {
   const root = document.querySelector("[data-backup-demo]");
@@ -23,8 +27,6 @@
     name: root.querySelector("[data-name]"),
     status: root.querySelector("[data-status]"),
     clock: root.querySelector("[data-clock]"),
-    done: root.querySelector("[data-done]"),
-    running: root.querySelector("[data-running]"),
     doneCount: root.querySelector("[data-done-count]"),
   };
 
@@ -49,10 +51,23 @@
     return "finishing up…";
   }
 
+  // The two panels hand over in CSS (see .device .panes): this only says which one is showing.
+  function show(state) {
+    if (root.dataset.state !== state) root.dataset.state = state;
+  }
+
+  function setProgress(fraction) {
+    el.bar.style.transform = "translateX(" + (fraction * 100 - 100).toFixed(2) + "%)";
+  }
+
   function settled() {
-    el.running.hidden = true;
-    el.done.hidden = false;
+    if (root.dataset.state === "done") return;
+    // The running panel is still visible while it scales away, so it finishes on the full count
+    // rather than on whatever the last frame before the minute happened to reach.
+    el.count.textContent = nf.format(TOTAL);
+    setProgress(1);
     el.doneCount.textContent = nf.format(TOTAL);
+    show("done");
   }
 
   if (reduced) {
@@ -61,27 +76,36 @@
     return;
   }
 
-  let start = null;
+  let elapsed = 0;
+  let last = null;
   let lastNameAt = -Infinity;
   let shownName = filename(0);
+  let shownClock = "";
+  let request = 0;
 
   function frame(now) {
-    if (start === null) start = now;
-    const elapsed = now - start;
+    // Time is added up frame by frame instead of read off a start timestamp, so a pause costs
+    // nothing: a gap longer than a few frames is a pause, not progress.
+    if (last !== null) elapsed += Math.min(now - last, 100);
+    last = now;
+    request = requestAnimationFrame(frame);
+
+    const clock = new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+    if (clock !== shownClock) el.clock.textContent = shownClock = clock;
 
     if (elapsed > RUN_MS + SETTLE_MS) {
-      // Loop: back to the beginning of the run.
-      start = now;
+      // Loop: back to the beginning of the run. The running panel is out of sight while its
+      // numbers go back to zero, and it scales in already reading 0.
+      elapsed = 0;
       lastNameAt = -Infinity;
-      el.running.hidden = false;
-      el.done.hidden = true;
-      requestAnimationFrame(frame);
+      el.count.textContent = nf.format(0);
+      setProgress(0);
+      show("running");
       return;
     }
 
     if (elapsed > RUN_MS) {
       settled();
-      requestAnimationFrame(frame);
       return;
     }
 
@@ -92,7 +116,7 @@
     const done = Math.min(TOTAL, Math.floor(eased * TOTAL));
 
     el.count.textContent = nf.format(done);
-    el.bar.style.width = (eased * 100).toFixed(2) + "%";
+    setProgress(eased);
 
     // A rate that wanders the way a real one does, without ever looking implausible.
     const wobble = 1 + 0.18 * Math.sin(elapsed / 2600) + 0.06 * Math.sin(elapsed / 640);
@@ -104,11 +128,26 @@
     }
     el.name.textContent = shownName;
     el.status.textContent = remaining(RUN_MS - elapsed);
-    el.clock.textContent = new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+  }
 
-    requestAnimationFrame(frame);
+  function play() {
+    if (request) return;
+    last = null;
+    delete root.dataset.paused;
+    request = requestAnimationFrame(frame);
+  }
+
+  function pause() {
+    cancelAnimationFrame(request);
+    request = 0;
+    root.dataset.paused = "";
   }
 
   el.total.textContent = nf.format(TOTAL);
-  requestAnimationFrame(frame);
+
+  if ("IntersectionObserver" in window) {
+    new IntersectionObserver(([entry]) => (entry.isIntersecting ? play() : pause())).observe(root);
+  } else {
+    play();
+  }
 })();

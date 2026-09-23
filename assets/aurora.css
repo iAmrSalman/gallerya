@@ -3,34 +3,74 @@
 :root {
   --base: #09090e;            /* Aurora.Colour.base: not pure black, a hint of blue */
   --ink: #ffffff;
-  --body: rgba(255, 255, 255, 0.62);
-  --quiet: rgba(255, 255, 255, 0.45);
-  --faint: rgba(255, 255, 255, 0.28);
+  /* The text greys the app lifted for contrast: they clear 4.5:1 over the brightest glow.
+     The old 0.62 / 0.45 / 0.28 left the faint grey — the price line, the captions — at 2.3:1. */
+  --body: rgba(255, 255, 255, 0.84);
+  --quiet: rgba(255, 255, 255, 0.70);
+  --faint: rgba(255, 255, 255, 0.60);
   --hairline: rgba(255, 255, 255, 0.12);
   --good: #33d98c;            /* Aurora.Colour.good */
   --warn: #ffb84d;
+  --danger: #ff9e99;          /* lifted from #ff6b6b, which measured 3.9:1 over a glow */
+  --link: #94c9ff;
   --azure-core: #1747c7;      /* Tint.azure.core — deep, because it is a light source */
-  --azure-accent: #73b8ff;    /* Tint.azure.accent — the legible reading of the same hue */
+  --azure-accent: #8cc7ff;    /* Tint.azure.accent — the legible reading of the same hue */
   --violet-core: #6b33b8;
-  --violet-accent: #b88cff;
+  --violet-accent: #c29eff;
   --jade-core: #0a8561;
-  --jade-accent: #33d98c;
+  --jade-accent: #4de09e;
   --panel: rgba(255, 255, 255, 0.05);
   --radius: 28px;
   --display: ui-serif, "New York", Georgia, "Times New Roman", serif;
   --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, "Helvetica Neue", sans-serif;
+
+  /* The app's springs, sampled into linear() so CSS moves the way SwiftUI does. Generated from
+     stiffness (2π / duration)² and damping ratio 1 − bounce; a spring has no duration of its own,
+     so each comes with the time it takes to settle within a thousandth.
+     --spring-hero: .spring(duration: 0.5, bounce: 0.34), the Backup hero changing state.
+     --spring-press: critically damped, response 0.3 — a control settling back after a press. */
+  --spring-hero: linear(0, 0.0302, 0.1071, 0.2127, 0.3326, 0.4557, 0.5741, 0.6824, 0.7774, 0.8574,
+    0.9222, 0.9727, 1.01, 1.0358, 1.0521, 1.0607, 1.0633, 1.0615, 1.0567, 1.0501, 1.0425, 1.0347,
+    1.0272, 1.0203, 1.0143, 1.0092, 1.0051, 1.0018, 0.9994, 0.9978, 0.9967, 0.9962, 0.996,
+    0.9961, 0.9964, 0.9968, 0.9973, 0.9978, 0.9983, 0.9987, 1);
+  --spring-hero-settle: 830ms;
+  --spring-press: linear(0, 0.0816, 0.2431, 0.4129, 0.562, 0.6819, 0.7736, 0.8412, 0.89, 0.9246,
+    0.9487, 0.9653, 0.9767, 0.9844, 0.9896, 0.9931, 0.9955, 0.997, 0.998, 0.9987, 1);
+  --spring-press-settle: 450ms;
+}
+
+/* Increase Contrast: the second value the app carries for every grey and status colour. */
+@media (prefers-contrast: more) {
+  :root {
+    --body: rgba(255, 255, 255, 0.94);
+    --quiet: rgba(255, 255, 255, 0.86);
+    --faint: rgba(255, 255, 255, 0.78);
+    --hairline: rgba(255, 255, 255, 0.26);
+    --good: #70f0b3;
+    --warn: #ffd185;
+    --danger: #ffbdb8;
+    --link: #b8deff;
+  }
 }
 
 * { box-sizing: border-box; }
 
-html { scroll-behavior: smooth; }
+/* Only for people who have not asked for less motion: a smooth jump down the page is exactly
+   the kind of large, vestibular movement Reduce Motion exists to stop. */
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
 
+/* The type is set in rem, so a reader who raised their browser's text size gets it: the web's
+   nearest thing to the Dynamic Type the app honours. 1rem is 16px at the default. */
 body {
   margin: 0;
   background: var(--base);
   color: var(--body);
-  font: 400 17px/1.65 var(--sans);
+  font: 400 1.0625rem/1.65 var(--sans);
+  font-optical-sizing: auto;
   -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent; /* every control draws its own pressed state */
   overflow-x: hidden;
 }
 
@@ -107,63 +147,117 @@ body {
   .aurora .azure { opacity: 1; }
 }
 
+/* Reduce Transparency: the app multiplies every glow by 0.22 rather than dropping it, because
+   the tint is navigation, not decoration. The layers already sum to one, so scaling the whole
+   stack is the same multiplication. */
+@media (prefers-reduced-transparency: reduce) {
+  .aurora { opacity: 0.22; }
+}
+
 .wrap { width: min(1080px, 92vw); margin: 0 auto; }
 .column { width: min(720px, 92vw); margin: 0 auto; }
 
-/* Glass, as the app draws it: a translucent fill that still refracts, plus a hairline. */
+/* Glass, as the app draws it: a translucent fill that still refracts, plus a hairline, and a
+   brighter line along the top edge where light catches the material. */
 .panel {
   background: var(--panel);
   border: 1px solid var(--hairline);
   border-radius: var(--radius);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
   backdrop-filter: blur(24px) saturate(140%);
   -webkit-backdrop-filter: blur(24px) saturate(140%);
   padding: 28px;
 }
 
-h1, h2, h3 { font-family: var(--display); color: var(--ink); font-weight: 700; letter-spacing: -0.01em; }
-h1 { font-size: clamp(34px, 5.6vw, 64px); line-height: 1.06; margin: 0 0 18px; text-wrap: balance; }
+/* Tracking follows size, as SF and New York's own tables do: the bigger the type, the tighter
+   it is set, down to nothing at body size. One value for every heading was right for none. */
+h1, h2, h3 { font-family: var(--display); color: var(--ink); font-weight: 700; }
+h1 { font-size: clamp(2.125rem, 5.6vw, 4rem); line-height: 1.06; letter-spacing: -0.02em; margin: 0 0 18px; text-wrap: balance; }
 
-h2 { font-size: clamp(27px, 3.4vw, 38px); line-height: 1.12; margin: 0 0 14px; text-wrap: balance; }
-h3 { font-size: 22px; line-height: 1.25; margin: 0 0 8px; font-weight: 600; }
-p { margin: 0 0 14px; }
-a { color: var(--azure-accent); text-decoration: none; }
-a:hover { text-decoration: underline; }
+h2 { font-size: clamp(1.6875rem, 3.4vw, 2.375rem); line-height: 1.12; letter-spacing: -0.015em; margin: 0 0 14px; text-wrap: balance; }
+h3 { font-size: 1.375rem; line-height: 1.25; letter-spacing: -0.005em; margin: 0 0 8px; font-weight: 600; }
+p { margin: 0 0 14px; text-wrap: pretty; }
+a { color: var(--link); text-decoration: none; }
+
+/* Hover only where there is a pointer that hovers. On a phone a tap leaves :hover stuck on
+   until the next tap somewhere else, which reads as the link having broken. */
+@media (hover: hover) {
+  a:hover { text-decoration: underline; }
+}
+
+/* Pressed is shown the instant the finger lands, not when it lifts: an iOS-style dim for text
+   links, and it comes back with the press spring rather than a snap. */
+a { transition: opacity var(--spring-press-settle) var(--spring-press); }
+a:active { opacity: 0.55; transition-duration: 0s; }
+
+:focus-visible { outline: 2px solid var(--link); outline-offset: 3px; border-radius: 6px; }
 
 /* The small, wide, upper-case marker the app puts above every group of panels. */
 .label {
-  font: 600 12px/1 var(--sans);
-  letter-spacing: 1.4px;
+  font: 600 0.75rem/1 var(--sans);
+  letter-spacing: 0.1167em;   /* the app's 1.4pt at 12pt, kept in proportion as it scales */
   text-transform: uppercase;
   color: var(--quiet);
   display: block;
   margin-bottom: 12px;
 }
 
-nav.top {
-  position: sticky; top: 0; z-index: 10;
-  backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+/* A floating material rather than a bar: the page scrolls under it. The material and its
+   hairline only arrive once there is content underneath to separate from, the way a navigation
+   bar is clear at the scroll edge — at the top of the page there is nothing there, and a blur
+   over nothing shows up as a band across the glow. All of it lives on one layer so a single
+   opacity can bring it in. */
+nav.top { position: sticky; top: 0; z-index: 10; }
+nav.top::before {
+  content: ""; position: absolute; inset: 0; z-index: -1;
   background: rgba(9, 9, 14, 0.62);
   border-bottom: 1px solid var(--hairline);
+  backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%);
 }
+@supports (animation-timeline: scroll()) {
+  nav.top::before {
+    animation: nav-edge linear both;
+    animation-timeline: scroll(root);
+    animation-range: 0 48px;
+  }
+}
+@keyframes nav-edge { from { opacity: 0; } to { opacity: 1; } }
+
 nav.top .wrap { display: flex; align-items: baseline; gap: 20px; padding: 14px 0; }
-nav.top .mark { font-family: var(--display); font-weight: 700; color: var(--ink); font-size: 20px; }
-nav.top a.link { color: var(--body); font-size: 15px; }
+nav.top .mark { font-family: var(--display); font-weight: 700; color: var(--ink); font-size: 1.25rem; letter-spacing: -0.01em; }
+nav.top a.link { color: var(--body); font-size: 0.9375rem; }
+nav.top a.link[aria-current="page"] { color: var(--ink); font-weight: 600; }
 nav.top .spacer { flex: 1; }
 
-header.hero { padding: clamp(56px, 11vw, 132px) 0 40px; text-align: center; }
-header.hero p.lede { font-size: clamp(18px, 2.2vw, 22px); color: var(--body); margin: 0 auto 28px; max-width: 30em; }
+/* The sticky nav would otherwise land on top of whatever "See how it works" jumps to. */
+section[id] { scroll-margin-top: 56px; }
 
+header.hero { padding: clamp(56px, 11vw, 132px) 0 40px; text-align: center; }
+header.hero p.lede { font-size: clamp(1.125rem, 2.2vw, 1.375rem); color: var(--body); margin: 0 auto 28px; max-width: 30em; }
+
+/* The primary button: presses in on touch-down, quickly, and settles back out on the press
+   spring once the finger lifts — the transition on :active is the way in, the one on .cta is
+   the way out. */
 .cta {
   display: inline-flex; align-items: center; gap: 10px;
   background: rgba(60, 120, 230, 0.62);
   border: 1px solid rgba(255, 255, 255, 0.22);
-  color: #fff; font: 700 17px var(--sans);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  color: #fff; font: 700 1.0625rem var(--sans);
   padding: 15px 30px; border-radius: 16px;
   backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  transition:
+    transform var(--spring-press-settle) var(--spring-press),
+    background-color 200ms ease-out,
+    opacity 0s;
 }
-.cta:hover { text-decoration: none; background: rgba(76, 138, 250, 0.72); }
+.cta:active { transform: scale(0.97); opacity: 1; transition-duration: 90ms, 200ms, 0s; }
+@media (hover: hover) {
+  .cta:hover { text-decoration: none; background-color: rgba(76, 138, 250, 0.72); }
+  .cta.quiet:hover { background-color: rgba(255, 255, 255, 0.1); }
+}
 .cta.quiet { background: rgba(255, 255, 255, 0.06); }
-.note { color: var(--faint); font-size: 14px; margin-top: 14px; }
+.note { color: var(--faint); font-size: 0.875rem; margin-top: 14px; }
 
 .shots { display: flex; gap: 22px; justify-content: center; flex-wrap: wrap; padding: 22px 0 8px; }
 .shots img {
@@ -181,34 +275,34 @@ section { padding: clamp(40px, 7vw, 82px) 0; }
 .dot.warn { background: var(--warn); box-shadow: 0 0 10px rgba(255, 184, 77, 0.7); }
 
 /* A headline number, as the app sets one: light weight, tabular figures. */
-.figure { font: 300 56px/1 var(--sans); font-variant-numeric: tabular-nums; color: var(--ink); display: block; }
+.figure { font: 300 3.5rem/1 var(--sans); font-variant-numeric: tabular-nums; color: var(--ink); display: block; }
 .figure.serif { font-family: var(--display); font-weight: 700; }
-.measure { font-variant-numeric: tabular-nums; font-size: 14px; color: var(--quiet); }
+.measure { font-variant-numeric: tabular-nums; font-size: 0.875rem; color: var(--quiet); }
 
 ol.steps { counter-reset: step; list-style: none; padding: 0; margin: 0; display: grid; gap: 16px; }
-ol.steps li { counter-increment: step; display: grid; grid-template-columns: 44px 1fr; gap: 16px; align-items: start; }
+ol.steps li { counter-increment: step; display: grid; grid-template-columns: 2.75rem 1fr; gap: 16px; align-items: start; }
 ol.steps li::before {
   content: counter(step);
-  font: 300 20px/42px var(--sans); text-align: center;
-  width: 42px; height: 42px; border-radius: 50%;
+  font: 300 1.25rem/2.625rem var(--sans); text-align: center;
+  width: 2.625rem; height: 2.625rem; border-radius: 50%;
   border: 1px solid var(--hairline); color: var(--ink);
   background: rgba(255, 255, 255, 0.04);
 }
 
 .price { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
-.price .amount { font: 300 40px/1 var(--sans); color: var(--ink); font-variant-numeric: tabular-nums; }
-.price .per { color: var(--quiet); font-size: 15px; }
+.price .amount { font: 300 2.5rem/1 var(--sans); color: var(--ink); font-variant-numeric: tabular-nums; }
+.price .per { color: var(--quiet); font-size: 0.9375rem; }
 .price ul { list-style: none; padding: 0; margin: 14px 0 0; }
 .price li { padding-left: 24px; position: relative; margin-bottom: 8px; }
 .price li::before { content: "✓"; position: absolute; left: 0; color: var(--good); }
 
-footer { border-top: 1px solid var(--hairline); padding: 38px 0 56px; color: var(--faint); font-size: 14px; }
+footer { border-top: 1px solid var(--hairline); padding: 38px 0 56px; color: var(--faint); font-size: 0.875rem; }
 footer a { color: var(--body); }
 footer .row { display: flex; gap: 18px; flex-wrap: wrap; margin-bottom: 10px; }
 
 /* The prose pages — privacy and support — get the same shell, narrower measure. */
-article.prose h1 { font-size: clamp(32px, 4.6vw, 46px); margin-bottom: 8px; }
-article.prose h2 { font-size: 24px; margin-top: 34px; }
+article.prose h1 { font-size: clamp(2rem, 4.6vw, 2.875rem); margin-bottom: 8px; }
+article.prose h2 { font-size: 1.5rem; margin-top: 34px; }
 article.prose ul { padding-left: 22px; }
 article.prose li { margin-bottom: 8px; }
 article.prose strong { color: var(--ink); }
@@ -279,11 +373,31 @@ header.hero p.lede { margin-left: 0; max-width: 34em; }
 .device .glass {
   background: var(--panel); border: 1px solid var(--hairline);
   border-radius: calc(var(--w) * 0.075); padding: calc(var(--w) * 0.05);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
   backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+}
+
+/* The running panel and the finished one share a place, so one can hand over to the other the
+   way BackupView's hero does: out and in along the same path, scaling from 0.94 on the app's own
+   spring. The same transition runs backwards when the loop restarts, so the panel leaves the
+   way it arrived. Visibility flips at the end of a hide and the start of a show, so the panel
+   that is gone is not left painting a blur nobody can see. */
+.device .panes { display: grid; }
+.device .panes > .glass {
+  grid-area: 1 / 1; align-self: start;
+  transition:
+    opacity var(--spring-hero-settle) var(--spring-hero),
+    transform var(--spring-hero-settle) var(--spring-hero),
+    visibility 0s linear 0s;
+}
+.device[data-state="running"] [data-done],
+.device[data-state="done"] [data-running] {
+  opacity: 0; transform: scale(0.94); visibility: hidden;
+  transition-delay: 0s, 0s, var(--spring-hero-settle);
 }
 .device .row { display: flex; align-items: center; gap: calc(var(--w) * 0.025); }
 .device .marker {
-  font-size: calc(var(--w) * 0.031); font-weight: 600; letter-spacing: 1.2px;
+  font-size: calc(var(--w) * 0.031); font-weight: 600; letter-spacing: 0.1167em;
   text-transform: uppercase; color: var(--quiet);
 }
 .device .rate { margin-left: auto; font-variant-numeric: tabular-nums; color: var(--quiet); font-size: calc(var(--w) * 0.034); }
@@ -293,6 +407,8 @@ header.hero p.lede { margin-left: 0; max-width: 34em; }
   font-variant-numeric: tabular-nums;
   margin-top: calc(var(--w) * 0.035);
 }
+/* Sans and light while it ticks; serif once it is a result, as Aurora.Font.serifFigure. */
+.device .count.serif { font-family: var(--display); font-weight: 700; }
 .device .of { display: block; color: var(--body); font-size: calc(var(--w) * 0.042); }
 .device .track {
   height: calc(var(--w) * 0.022); border-radius: 999px;
@@ -300,11 +416,15 @@ header.hero p.lede { margin-left: 0; max-width: 34em; }
   margin: calc(var(--w) * 0.05) 0 calc(var(--w) * 0.04);
   overflow: hidden;
 }
+/* Full width and slid in from the left, rather than grown: a transform is composited, where a
+   width is laid out again on every frame of the run. The track clips the part still to come. */
 .device .track span {
-  display: block; height: 100%; width: 0%;
+  display: block; height: 100%; width: 100%;
+  transform: translateX(-100%);
   border-radius: 999px;
   background: linear-gradient(90deg, var(--azure-core), var(--azure-accent));
-  box-shadow: 0 0 12px rgba(115, 184, 255, 0.55);
+  box-shadow: 0 0 12px rgba(140, 199, 255, 0.55);
+  will-change: transform;
 }
 .device .file {
   font-family: ui-monospace, "SF Mono", Menlo, monospace;
@@ -314,10 +434,10 @@ header.hero p.lede { margin-left: 0; max-width: 34em; }
 .device .status { font-variant-numeric: tabular-nums; font-size: calc(var(--w) * 0.034); color: var(--faint); margin-top: calc(var(--w) * 0.012); }
 .device .stop {
   margin-top: calc(var(--w) * 0.05); text-align: center;
-  border: 1px solid rgba(255, 107, 107, 0.45); color: #ff6b6b;
+  border: 1px solid rgba(255, 158, 153, 0.45); color: var(--danger);
   border-radius: calc(var(--w) * 0.04); padding: calc(var(--w) * 0.035) 0;
   font-weight: 700; font-size: calc(var(--w) * 0.042);
-  background: rgba(255, 107, 107, 0.08);
+  background: rgba(255, 158, 153, 0.08);
 }
 .device .verdict { display: flex; align-items: center; gap: 8px; }
 .device .verdict .marker { color: var(--good); }
@@ -326,7 +446,7 @@ header.hero p.lede { margin-left: 0; max-width: 34em; }
   margin: 14px auto 0;
   text-align: center;
   color: var(--faint);
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 
 /* The three working bars the app animates beside "Backing up". */
@@ -338,15 +458,21 @@ header.hero p.lede { margin-left: 0; max-width: 34em; }
 .bars i:nth-child(2) { animation-delay: 0.18s; }
 .bars i:nth-child(3) { animation-delay: 0.36s; }
 @keyframes bar { 0%, 100% { height: 28%; } 50% { height: 100%; } }
-@media (prefers-reduced-motion: reduce) { .bars i { animation: none; height: 64%; } }
+.device[data-paused] .bars i { animation-play-state: paused; }
+/* Under Reduce Motion the demo opens already finished, and that one change of state should be
+   a cut, not a spring the reader asked not to see. */
+@media (prefers-reduced-motion: reduce) {
+  .bars i { animation: none; height: 64%; }
+  .device .panes > .glass { transition: none; }
+}
 
 /* Screenshots further down: exported at twice their rendered width so a retina
    display has pixels to work with, which the first attempt did not. */
 .shots img { width: min(280px, 44vw); height: auto; }
 
 header.hero .split > div { container-type: inline-size; }
-header.hero h1 { font-size: clamp(32px, 11cqw, 60px); }
-@media (max-width: 860px) { header.hero h1 { font-size: clamp(34px, 8vw, 52px); } }
+header.hero h1 { font-size: clamp(2rem, 11cqw, 3.75rem); }
+@media (max-width: 860px) { header.hero h1 { font-size: clamp(2.125rem, 8vw, 3.25rem); } }
 
 /* ── A section that pairs an explanation with the screen it describes ─────── */
 .feature {
@@ -360,11 +486,21 @@ header.hero h1 { font-size: clamp(32px, 11cqw, 60px); }
   border-radius: 30px; border: 1px solid var(--hairline);
   box-shadow: 0 34px 80px rgba(0, 0, 0, 0.55);
 }
-.feature figcaption { color: var(--faint); font-size: 13px; margin-top: 14px; max-width: 30em; margin-inline: auto; }
+.feature figcaption { color: var(--faint); font-size: 0.8125rem; margin-top: 14px; max-width: 30em; margin-inline: auto; }
 .feature .grid.two { grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); margin-top: 22px; }
 .feature .panel { padding: 22px; }
 .feature > div > p { max-width: 38em; }
 @media (max-width: 860px) {
   .feature { grid-template-columns: 1fr; }
   .feature.reverse > figure { order: 0; }
+}
+
+/* ── Reduce Transparency, for the surfaces ─────────────────────────────────────
+   Last in the file so it outranks every surface above it. Frosted to solid, blur dropped: the
+   same hierarchy — panel over page, button over panel — with nothing showing through. */
+@media (prefers-reduced-transparency: reduce) {
+  .panel, .device .glass { background: #15151b; backdrop-filter: none; -webkit-backdrop-filter: none; }
+  nav.top::before { background: var(--base); backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .cta { background: #2f5fc0; backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .cta.quiet { background: #1c1c23; }
 }
