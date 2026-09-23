@@ -54,6 +54,32 @@ layout: default
 </div></header>
 
 <section><div class="wrap">
+  <span class="label">The film</span>
+  <h2>See it in 23 seconds.</h2>
+  <!-- It waits to be asked: it has a soundtrack, and the hero already has one thing moving.
+       preload="metadata" is a few kilobytes — enough for the controls to show 0:23 — and the
+       rest only comes down once somebody presses play. playsinline keeps it on the page on an
+       iPhone rather than throwing it full screen; full screen is still one tap away. -->
+  <figure class="film">
+    <video src="{{ '/assets/film/gallerya.mp4' | relative_url }}"
+           poster="{{ '/assets/film/poster.jpg' | relative_url }}"
+           width="1920" height="1080" controls playsinline preload="metadata"
+           aria-describedby="film-lines"></video>
+    <figcaption>A backup, the week after, the archive, Cleanup and reminders — with music.</figcaption>
+    <!-- Everything the film says is on screen rather than spoken, so this is what a screen
+         reader gets in its place. -->
+    <div class="visually-hidden" id="film-lines">
+      Your photos pay rent. Every month. Your photos, on a drive you own: no iCloud, no storage
+      subscription, no account. Verified, not assumed: every file is hashed while it is written.
+      One week later, only what is new gets copied; the other 8,213 are already on the drive.
+      A proper gallery, by year and month, albums preserved. Know what is safe to delete.
+      Shall I nag you? “You’ll remember. Probably.” Own the place. Gallerya: Photo Backup —
+      $4.99 once, yours for life. For iPhone and iPad.
+    </div>
+  </figure>
+</div></section>
+
+<section><div class="wrap">
   <span class="label">What it does</span>
   <h2>A backup you can hold.</h2>
   <div class="grid">
