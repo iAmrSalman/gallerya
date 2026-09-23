@@ -49,6 +49,7 @@
 <meta name="twitter:description" content="{{ page_description }}">
 <meta name="twitter:image" content="{{ share_image }}">
 <link rel="stylesheet" href="{{ '/assets/aurora.css' | relative_url }}?v={{ site.time | date: '%s' }}">
+<script src="{{ '/assets/aurora.js' | relative_url }}?v={{ asset_version }}" defer></script>
 
 {%- if page.url == '/' -%}
 <script type="application/ld+json">

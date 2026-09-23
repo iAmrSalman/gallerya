@@ -27,13 +27,15 @@
   /* The app's springs, sampled into linear() so CSS moves the way SwiftUI does. Generated from
      stiffness (2π / duration)² and damping ratio 1 − bounce; a spring has no duration of its own,
      so each comes with the time it takes to settle within a thousandth.
-     --spring-hero: .spring(duration: 0.5, bounce: 0.34), the Backup hero changing state.
+     --spring-hero: critically damped, response 0.5 — the demo's panel changing state. The one
+       deliberate departure from the app: BackupView's hero is .spring(duration: 0.5, bounce: 0.34),
+       where a person's own backup starting is the event. Here nobody touched anything, and
+       overshoot reads as momentum — a panel that changes on its own has none to carry.
      --spring-press: critically damped, response 0.3 — a control settling back after a press. */
-  --spring-hero: linear(0, 0.0302, 0.1071, 0.2127, 0.3326, 0.4557, 0.5741, 0.6824, 0.7774, 0.8574,
-    0.9222, 0.9727, 1.01, 1.0358, 1.0521, 1.0607, 1.0633, 1.0615, 1.0567, 1.0501, 1.0425, 1.0347,
-    1.0272, 1.0203, 1.0143, 1.0092, 1.0051, 1.0018, 0.9994, 0.9978, 0.9967, 0.9962, 0.996,
-    0.9961, 0.9964, 0.9968, 0.9973, 0.9978, 0.9983, 0.9987, 1);
-  --spring-hero-settle: 830ms;
+  --spring-hero: linear(0, 0.0392, 0.1285, 0.2385, 0.3517, 0.4587, 0.5547, 0.638, 0.7085, 0.7672,
+    0.8153, 0.8543, 0.8856, 0.9106, 0.9304, 0.946, 0.9582, 0.9677, 0.9752, 0.9809, 0.9854, 0.9888,
+    0.9915, 0.9935, 0.995, 0.9962, 0.9971, 0.9978, 0.9984, 0.9988, 1);
+  --spring-hero-settle: 740ms;
   --spring-press: linear(0, 0.0816, 0.2431, 0.4129, 0.562, 0.6819, 0.7736, 0.8412, 0.89, 0.9246,
     0.9487, 0.9653, 0.9767, 0.9844, 0.9896, 0.9931, 0.9955, 0.997, 0.998, 0.9987, 1);
   --spring-press-settle: 450ms;
@@ -78,45 +80,46 @@ body {
   overflow-x: hidden;
 }
 
-/* ── The background, breathing through the app's three tints ───────────────────
+/* ── The background: the app's three tints, following the page ───────────────
    The app paints one tint per screen: azure on Backup, jade on Cleanup, violet on
-   the Archive. A website has no tabs to switch between, so instead of picking one
-   it cross-fades all three — the same three radial glows in the same positions
-   (one high and slightly off-centre so the light falls from above the content, one
-   cooler low down so it is never a flat wash, one tight at the top), just with the
-   colours handed over.
+   the Archive. The page has the same three subjects, so it does the same thing:
+   each section says which screen it is about (data-tint), and the light takes on
+   that section's tint as it reaches the middle of the window. assets/aurora.js
+   does the arithmetic. The same three radial glows in the same positions (one high
+   and slightly off-centre so the light falls from above the content, one cooler low
+   down so it is never a flat wash, one tight at the top), just with the colours
+   handed over.
+
+   It used to cross-fade all three on a ten-second loop, with a slow drift on top.
+   That is a full-window background moving and changing on its own, around a third of
+   a hertz — the thing Reduce Motion exists to stop, and a distraction for everyone
+   else, on a page whose hero already has one thing moving. Tied to scroll, the
+   change happens because the reader moved, runs backwards when they scroll back, and
+   says something: you are reading about the archive now.
 
    Three stacked layers whose opacities cross-fade, rather than animating the
-   gradients themselves: opacity and transform are the two things a browser can
-   composite on the GPU, so this costs nothing to run. Linear timing on purpose —
-   at any moment exactly two layers are visible and their opacities sum to one, so
-   total brightness stays constant and there is no dip as one hands over to the next.
+   gradients themselves: opacity is composited on the GPU, so this costs nothing.
+   The script's weights always sum to one, and that only keeps the brightness
+   constant if the layers add. Stacked normally, the top layer at half opacity lets
+   through half of a lower layer that is itself at half, so mid-handover the screen
+   is a half of one tint, a quarter of the other, and a quarter of the dark base —
+   measured in WebKit, a quarter less light at the brightest part of the glow, darker
+   than either tint on its own. plus-lighter makes the stack add, and the midpoint
+   falls between the two tints it joins.
 
-   That sum only holds if the layers add. Stacked normally, the top layer at half
-   opacity lets through half of a lower layer that is itself at half, so mid-handover
-   the screen is a half of one tint, a quarter of the other, and a quarter of the dark
-   base. Measured in WebKit, the brightest part of the glow lost a quarter of its light
-   at every handover, darker than either tint on its own — a pulse every three and a
-   third seconds across the whole viewport. plus-lighter makes the stack add, as the
-   arithmetic assumed, and the midpoint now falls between the two tints it joins.
-
-   One full cycle is 10 seconds: about three and a third to hand each hue over to the
-   next, so the change is plainly visible while reading a single paragraph.
-
-   The three delays are a third of the cycle apart, and that is what keeps the sum at
-   one. They are derived from the period, not picked: retiming this means changing the
-   duration and both delays together, or the background starts to throb. */
+   Without the script, or on the pages with no sections to follow, it holds on
+   azure: the tint the app opens on. */
 .aurora { position: fixed; inset: 0; z-index: -1; }
 
 .aurora .glow {
   position: absolute; inset: -12%;
   opacity: 0;
   mix-blend-mode: plus-lighter;   /* .aurora is its own stacking context, so they add to each other, not to the page */
-  animation: tint-cycle 10s linear infinite, tint-drift 17s ease-in-out infinite alternate;
-  will-change: opacity, transform;
+  will-change: opacity;
 }
 
 .aurora .azure {
+  opacity: 1;
   background:
     radial-gradient(60vw 60vw at 42% -8%, rgb(23, 71, 199) 0%, rgba(23, 71, 199, 0.28) 50%, transparent 100%),
     radial-gradient(55vw 55vw at 97% 74%, rgba(76, 36, 153, 0.72) 0%, transparent 100%),
@@ -127,37 +130,12 @@ body {
     radial-gradient(60vw 60vw at 42% -8%, rgb(10, 133, 97) 0%, rgba(10, 133, 97, 0.28) 50%, transparent 100%),
     radial-gradient(55vw 55vw at 97% 74%, rgba(15, 61, 133, 0.72) 0%, transparent 100%),
     radial-gradient(22vw 22vw at 42% 0%, rgba(10, 133, 97, 0.55) 0%, transparent 100%);
-  animation-delay: -3.3333s, -5s;
 }
 .aurora .violet {
   background:
     radial-gradient(60vw 60vw at 42% -8%, rgb(107, 51, 184) 0%, rgba(107, 51, 184, 0.28) 50%, transparent 100%),
     radial-gradient(55vw 55vw at 97% 74%, rgba(26, 51, 140, 0.72) 0%, transparent 100%),
     radial-gradient(22vw 22vw at 42% 0%, rgba(107, 51, 184, 0.55) 0%, transparent 100%);
-  animation-delay: -6.6667s, -11s;
-}
-
-/* A triangular wave: up over a third of the cycle, down over the next, dark for the
-   rest. Offsetting each layer by a third means one is always arriving as another leaves. */
-@keyframes tint-cycle {
-  0%   { opacity: 1; }
-  33.333% { opacity: 0; }
-  66.667% { opacity: 0; }
-  100% { opacity: 1; }
-}
-
-/* A drift so the light is never quite still. Left at 17s against the colour cycle's 10s
-   rather than sped up with it: the movement reads as the light being alive, and at three
-   seconds it would read as wobbling. Coprime, so the pair do not loop visibly. */
-@keyframes tint-drift {
-  from { transform: translate3d(0, 0, 0) scale(1); }
-  to   { transform: translate3d(-2.5%, 1.5%, 0) scale(1.07); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  /* Hold on azure — the tint the app opens on — and stop moving. */
-  .aurora .glow { animation: none; }
-  .aurora .azure { opacity: 1; }
 }
 
 /* Reduce Transparency: the app multiplies every glow by 0.22 rather than dropping it, because
@@ -397,10 +375,11 @@ header.hero p.lede { margin-left: 0; max-width: 34em; }
 }
 
 /* The running panel and the finished one share a place, so one can hand over to the other the
-   way BackupView's hero does: out and in along the same path, scaling from 0.94 on the app's own
-   spring. The same transition runs backwards when the loop restarts, so the panel leaves the
-   way it arrived. Visibility flips at the end of a hide and the start of a show, so the panel
-   that is gone is not left painting a blur nobody can see. */
+   way BackupView's hero does: out and in along the same path, scaling from 0.94 — critically
+   damped here, where the app's bounces (see --spring-hero). The same transition runs backwards
+   when the loop restarts, so the panel leaves the way it arrived. Visibility flips at the end of
+   a hide and the start of a show, so the panel that is gone is not left painting a blur nobody
+   can see. */
 .device .panes { display: grid; }
 .device .panes > .glass {
   grid-area: 1 / 1; align-self: start;
