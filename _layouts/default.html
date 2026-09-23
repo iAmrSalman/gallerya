@@ -12,7 +12,13 @@
 {% if page.title and page.title != site.title %}{{ page.title }} · {{ site.title }}{% else %}{{ site.title }} — {{ site.tagline }}{% endif %}
 {%- endcapture -%}
 {%- assign page_description = page.description | default: site.description -%}
-{%- assign share_image = '/assets/og.png' | absolute_url -%}
+{%- comment -%}
+  Images carry the build time, like the stylesheet: link previews cache the share card by URL for
+  days, and browsers hold on to favicons longer still, so a new icon at an old address is one
+  nobody sees.
+{%- endcomment -%}
+{%- capture asset_version -%}{{ site.time | date: '%s' }}{%- endcapture -%}
+{%- assign share_image = '/assets/og.png' | absolute_url | append: '?v=' | append: asset_version -%}
 
 <title>{{ page_title }}</title>
 <meta name="description" content="{{ page_description }}">
@@ -23,9 +29,9 @@
 {%- endif %}
 <meta name="theme-color" content="#09090e">
 
-<link rel="icon" href="{{ '/assets/icon-32.png' | relative_url }}" sizes="32x32" type="image/png">
-<link rel="icon" href="{{ '/assets/icon-512.png' | relative_url }}" sizes="512x512" type="image/png">
-<link rel="apple-touch-icon" href="{{ '/assets/icon-180.png' | relative_url }}">
+<link rel="icon" href="{{ '/assets/icon-32.png' | relative_url }}?v={{ asset_version }}" sizes="32x32" type="image/png">
+<link rel="icon" href="{{ '/assets/icon-512.png' | relative_url }}?v={{ asset_version }}" sizes="512x512" type="image/png">
+<link rel="apple-touch-icon" href="{{ '/assets/icon-180.png' | relative_url }}?v={{ asset_version }}">
 
 <meta property="og:title" content="{{ page_title }}">
 <meta property="og:description" content="{{ page_description }}">
