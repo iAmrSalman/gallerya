@@ -255,6 +255,8 @@ header.hero p.lede { font-size: clamp(1.125rem, 2.2vw, 1.375rem); color: var(--b
 }
 .cta.quiet { background: rgba(255, 255, 255, 0.06); }
 .note { color: var(--faint); font-size: 0.875rem; margin-top: 14px; }
+/* Two buttons side by side, wrapping to a stack on a narrow phone. */
+.ctas { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin: 0; }
 
 .shots { display: flex; gap: 22px; justify-content: center; flex-wrap: wrap; padding: 22px 0 8px; }
 .shots img {
