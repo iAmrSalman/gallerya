@@ -1,11 +1,11 @@
-url: https://iamrsalman.github.io
-baseurl: /gallerya
+url: https://getgallerya.com
+baseurl: ""
 lang: en
 
 # Paste the token Search Console shows for the "HTML tag" verification method — just the content
-# value, not the whole tag. Ownership of a github.io address cannot be proved by DNS, because
-# github.io is a public suffix and the DNS is GitHub's, so this or an uploaded google*.html file
-# are the options.
+# value, not the whole tag. This one was issued for the old iamrsalman.github.io/gallerya address;
+# now that the site has its own domain, a Search Console "Domain" property verified with a DNS TXT
+# record at the registrar is the simpler route, and covers www and every path.
 google_site_verification: P5dJ1cfrVmn5m1UAlckmDKL45XYdViexvRZBAKJpRWY
 
 title: Gallerya
