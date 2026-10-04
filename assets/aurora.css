@@ -314,10 +314,13 @@ header.hero .split {
   grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
 }
 header.hero p.lede { margin-left: 0; max-width: 34em; }
+/* The hero's buttons start on the copy's left edge, like the headline above them. */
+header.hero .ctas { justify-content: flex-start; }
 @media (max-width: 860px) {
   header.hero { text-align: center; }
   header.hero .split { grid-template-columns: 1fr; }
   header.hero p.lede { margin-left: auto; margin-right: auto; }
+  header.hero .ctas { justify-content: center; }
 }
 
 :root { --device-w: min(330px, 78vw); }
