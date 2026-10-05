@@ -174,62 +174,52 @@ layout: default
   </div>
 </div></section>
 
-<!-- One card at a time. It moves on by itself (assets/use-cases.js), staying on each card for
-     as long as it takes to read, and it can be swiped, scrolled with a trackpad, or moved with
-     the arrow keys once it has focus. The buttons and dots stay hidden until the script runs.
-     Each card has an id so an ad or a post can land on the one it is about, e.g.
-     /?ct=ig_ad_travel#travel scrolls the row to the Travelers card. -->
-<section id="use-cases" data-tint="azure"><div class="wrap" data-carousel>
-  <div class="carousel-head">
-    <div>
-      <span class="label">Who it’s for</span>
-      <h2>Wherever the photos pile up.</h2>
-    </div>
-    <div class="carousel-nav" hidden>
-      <button class="carousel-btn" type="button" data-carousel-prev aria-controls="use-case-track" aria-label="Previous"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-      <button class="carousel-btn" type="button" data-carousel-play aria-controls="use-case-track" aria-label="Pause"><svg viewBox="0 0 24 24" aria-hidden="true"><g data-icon-pause><rect x="7" y="5.5" width="3.2" height="13" rx="1" fill="currentColor"/><rect x="13.8" y="5.5" width="3.2" height="13" rx="1" fill="currentColor"/></g><path data-icon-play d="M8 5.5v13l10.5-6.5z" fill="currentColor"/></svg></button>
-      <button class="carousel-btn" type="button" data-carousel-next aria-controls="use-case-track" aria-label="Next"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-    </div>
-  </div>
-  <div class="carousel" id="use-case-track" role="region" aria-roledescription="carousel" aria-label="Who it’s for" tabindex="0">
-    <div class="panel" id="travel" role="group" aria-roledescription="slide" aria-label="1 of 9: Travelers">
+<!-- Nine cards in a grid. With a mouse, a card tilts towards the pointer and a light runs round
+     its edge while the pointer is on it (assets/use-cases.js); nothing moves on its own. On a
+     touch screen the light goes round each card once as it comes into view. Each card has an id
+     so an ad or a post can land on the one it is about, e.g. /?ct=ig_ad_travel#travel, and the
+     card it lands on gets the same single sweep. -->
+<section id="use-cases" data-tint="azure"><div class="wrap">
+  <span class="label">Who it’s for</span>
+  <h2>Wherever the photos pile up.</h2>
+  <div class="grid personas">
+    <div class="panel persona" id="travel">
       <h3>Travelers</h3>
       <p>Day three of the trip and the phone is full. Back the trip up to a flash drive in the hotel room — no Wi&#8209;Fi, no roaming data, nothing uploaded — then free up space and keep shooting.</p>
     </div>
-    <div class="panel" id="creators" role="group" aria-roledescription="slide" aria-label="2 of 9: Content creators">
+    <div class="panel persona" id="creators">
       <h3>Content creators</h3>
       <p>Filming every day fills a phone fast. Offload the originals to an external SSD — original-quality video, RAW and Live Photos intact, every file hashed as it is written — before you clear the camera roll for the next shoot.</p>
     </div>
-    <div class="panel" id="instagram" role="group" aria-roledescription="slide" aria-label="3 of 9: Instagram users">
+    <div class="panel persona" id="instagram">
       <h3>Instagram users</h3>
       <p>Edits, exports and saved Reels pile up in the camera roll. Every photo goes to the drive with both its edited and original versions, and Cleanup groups the media saved from other apps, so you can see what is taking the space.</p>
     </div>
-    <div class="panel" id="photographers" role="group" aria-roledescription="slide" aria-label="4 of 9: Photographers">
+    <div class="panel persona" id="photographers">
       <h3>Photographers</h3>
       <p>Shooting RAW on an iPhone? Every file reaches the drive as the original, never re-encoded, and the whole archive can be re-checked against its recorded SHA-256 whenever you like.</p>
     </div>
-    <div class="panel" id="families" role="group" aria-roledescription="slide" aria-label="5 of 9: Parents and families">
+    <div class="panel persona" id="families">
       <h3>Parents and families</h3>
       <p>Years of first steps and birthdays, sorted by year and month on a drive you keep in a drawer. Plain dated folders any computer can open, so they outlive the phone — and the app.</p>
     </div>
-    <div class="panel" id="no-computer" role="group" aria-roledescription="slide" aria-label="6 of 9: No computer at home">
+    <div class="panel persona" id="no-computer">
       <h3>No computer at home</h3>
       <p>No Mac or PC needed. The backup runs on the iPhone or iPad itself, straight to the drive plugged into it — nothing to install anywhere else.</p>
     </div>
-    <div class="panel" id="new-phone" role="group" aria-roledescription="slide" aria-label="7 of 9: Switching phones">
+    <div class="panel persona" id="new-phone">
       <h3>Switching phones</h3>
       <p>Before the old phone goes back or gets sold, put its photos and videos on a drive you own. Copy anything back into Photos on the new one whenever you want it.</p>
     </div>
-    <div class="panel" id="leaving-icloud" role="group" aria-roledescription="slide" aria-label="8 of 9: Leaving iCloud+">
+    <div class="panel persona" id="leaving-icloud">
       <h3>Leaving iCloud+</h3>
       <p>Stopping a storage plan? Photos that only live in iCloud are downloaded as originals during the backup, so the drive gets the real files, not thumbnails. $4.99 once, against $119.88 a year for iCloud+ 2&nbsp;TB in the US.</p>
     </div>
-    <div class="panel" id="privacy" role="group" aria-roledescription="slide" aria-label="9 of 9: Privacy first">
+    <div class="panel persona" id="privacy">
       <h3>Privacy first</h3>
       <p>No account, no server, nothing uploaded. Your library goes from your phone to a drive in your hand, and the App Store privacy label says Data Not Collected.</p>
     </div>
   </div>
-  <div class="carousel-dots" hidden></div>
 </div></section>
 
 <section data-tint="azure"><div class="wrap">
