@@ -8,10 +8,10 @@ title: Privacy Policy
 
 # Privacy Policy
 
-**Gallerya** — last updated 16 September 2026
+**Gallerya** — last updated 5 October 2026
 
 Gallerya does not collect, transmit, or store any personal information. There is no account, no
-sign-in, and no server. This policy exists to say exactly that, and to explain the two places where
+sign-in, and no server. This policy exists to say exactly that, and to explain the three places where
 anything at all leaves your device.
 
 ## Your photos and videos
@@ -34,7 +34,7 @@ confirming.
 
 All of it is stored locally on your device or on your drive. None of it is sent anywhere.
 
-## The two exceptions
+## The three exceptions
 
 **Checking for an update.** Gallerya asks Apple's public App Store lookup service
 (`itunes.apple.com`) whether a newer version has been published. The request contains the app's
@@ -46,10 +46,17 @@ system. Apple handles the payment; the developer never sees your payment details
 Apple Account. Apple provides only aggregate sales figures. Apple's handling of that transaction is
 covered by [Apple's Privacy Policy](https://www.apple.com/legal/privacy/).
 
+**Ad attribution, handled by Apple.** If you installed Gallerya after tapping one of its ads, Apple's
+[SKAdNetwork](https://developer.apple.com/documentation/storekit/skadnetwork) may tell that ad
+network that an install happened, so the ad can be credited. Apple sends that message itself, after
+a random delay and without anything that identifies you or your device. Gallerya sends nothing: it
+only tells iOS, once, on first launch, that the app was opened. It never reads an advertising
+identifier and never asks to track you.
+
 ## What Gallerya does not do
 
 - No analytics, telemetry, or crash reporting.
-- No advertising, and no tracking across apps or websites.
+- No ads inside the app, and no tracking across apps or websites.
 - No third-party SDKs.
 - No data collected, sold, or shared with anyone.
 
