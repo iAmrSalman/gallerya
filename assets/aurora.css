@@ -520,6 +520,66 @@ header.hero h1 { font-size: clamp(2rem, 11cqw, 3.75rem); }
   clip-path: inset(50%); white-space: nowrap;
 }
 
+/* ── Who it's for: one card at a time ─────────────────────────────────────────
+   The row is as wide as one card and snaps to it. assets/use-cases.js moves it on by itself,
+   pauses it, and keeps the dots under it in step. The card's type is a size up from the other
+   panels, since it has the width to itself. */
+.carousel-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 18px; }
+.carousel-nav { display: flex; gap: 10px; flex: none; margin-bottom: 14px; }
+.carousel-nav[hidden], .carousel-dots[hidden] { display: none; }
+.carousel-btn {
+  width: 44px; height: 44px; border-radius: 50%;
+  display: grid; place-items: center; padding: 0; cursor: pointer; color: #fff;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  transition:
+    transform var(--spring-press-settle) var(--spring-press),
+    background-color 200ms ease-out,
+    opacity 200ms ease-out;
+}
+.carousel-btn svg { width: 18px; height: 18px; }
+.carousel-btn:active { transform: scale(0.94); transition-duration: 90ms, 200ms, 200ms; }
+@media (hover: hover) {
+  .carousel-btn:hover { background-color: rgba(255, 255, 255, 0.1); }
+}
+.carousel-btn [data-icon-play] { display: none; }
+.carousel-btn[data-paused] [data-icon-play] { display: inline; }
+.carousel-btn[data-paused] [data-icon-pause] { display: none; }
+.carousel {
+  display: flex; gap: 18px;
+  overflow-x: auto; overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  padding: 2px 0 6px;
+}
+.carousel::-webkit-scrollbar { display: none; }
+.carousel:focus-visible { outline-offset: 6px; border-radius: var(--radius); }
+.carousel > .panel {
+  flex: 0 0 100%; scroll-snap-align: start;
+  padding: clamp(28px, 4.4vw, 48px);
+  min-height: clamp(220px, 24vw, 260px);
+}
+.carousel > .panel h3 { font-size: clamp(1.5rem, 2.6vw, 1.875rem); margin-bottom: 12px; }
+.carousel > .panel p { font-size: clamp(1.0625rem, 1.6vw, 1.25rem); line-height: 1.55; max-width: 60ch; margin-bottom: 0; }
+.carousel-dots { display: flex; justify-content: center; gap: 4px; margin-top: 14px; }
+.carousel-dots button {
+  width: 28px; height: 28px; padding: 0; border: 0; background: none; cursor: pointer;
+  display: grid; place-items: center;
+}
+.carousel-dots button::before {
+  content: ""; width: 8px; height: 8px; border-radius: 4px;
+  background: rgba(255, 255, 255, 0.28);
+  transition: width 300ms ease-out, background-color 300ms ease-out;
+}
+.carousel-dots button[aria-current="true"]::before { width: 22px; background: var(--ink); }
+/* On a phone the row is swiped and the dots are tapped, so the arrows go and only the pause
+   button stays beside the heading, which otherwise wraps onto three lines. */
+@media (max-width: 560px) {
+  .carousel-btn[data-carousel-prev], .carousel-btn[data-carousel-next] { display: none; }
+}
+
 /* ── Reduce Transparency, for the surfaces ─────────────────────────────────────
    Last in the file so it outranks every surface above it. Frosted to solid, blur dropped: the
    same hierarchy — panel over page, button over panel — with nothing showing through. */
@@ -528,4 +588,5 @@ header.hero h1 { font-size: clamp(2rem, 11cqw, 3.75rem); }
   nav.top::before { background: var(--base); backdrop-filter: none; -webkit-backdrop-filter: none; }
   .cta { background: #2f5fc0; backdrop-filter: none; -webkit-backdrop-filter: none; }
   .cta.quiet { background: #1c1c23; }
+  .carousel-btn { background: #1c1c23; backdrop-filter: none; -webkit-backdrop-filter: none; }
 }
