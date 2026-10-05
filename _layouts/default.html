@@ -108,14 +108,16 @@
 {%- endcomment %}
 <script>document.addEventListener("touchstart", function () {}, { passive: true });</script>
 {%- comment -%}
-  Meta and X won't send a Traffic ad straight to the App Store, so the ads land here with their
-  campaign token as ?ct=. Hand it on to the App Store buttons so App Store Connect credits the
-  install to the ad rather than to ct=site. Only ad tokens are accepted.
+  Links from elsewhere land here with a campaign token as ?ct=: the Instagram and X ads (Meta and
+  X won't send a Traffic ad straight to the App Store), and the community posts on Hacker News,
+  Product Hunt, Reddit and the like. Hand it on to the App Store buttons so App Store Connect
+  credits the install to where the visitor came from rather than to ct=site. Only ad tokens and
+  the listed community tokens are accepted.
 {%- endcomment %}
 <script>
 (function () {
   var ct = new URLSearchParams(location.search).get("ct");
-  if (!ct || !/^(ig|x)_ad_[a-z0-9_]{1,30}$/.test(ct)) return;
+  if (!ct || !/^((ig|x)_ad_[a-z0-9_]{1,30}|hn|producthunt|reddit|macrumors|indiehackers|alternativeto|press)$/.test(ct)) return;
   document.querySelectorAll('a[href^="https://apps.apple.com/"]').forEach(function (a) {
     var url = new URL(a.href);
     url.searchParams.set("ct", ct);
